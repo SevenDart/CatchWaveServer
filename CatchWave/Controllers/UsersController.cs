@@ -18,6 +18,7 @@ namespace CatchWave.Controllers
                 user = UsersManageService.Instance.CreateUser(user);
                 return Ok(new 
                 {
+                    user = user,
                     token = AuthTools.CreateToken(user.Id, user.Username)
                 });
             }
