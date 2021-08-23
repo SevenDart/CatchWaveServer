@@ -1,3 +1,4 @@
+using CatchWave.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,12 +14,14 @@ namespace CatchWave
         {
             services.AddControllers();
             services.AddSwaggerGen();
+            services.AddSignalR();
 
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
                 {
                     builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowCredentials().AllowAnyMethod();
                 });
             });
             
@@ -28,9 +31,9 @@ namespace CatchWave
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = AuthTools.ISSUER,
+                    ValidIssuer = AuthTools.Issuer,
                     ValidateAudience = true,
-                    ValidAudience = AuthTools.AUDIENCE,
+                    ValidAudience = AuthTools.Audience,
                     ValidateLifetime = true,
                     IssuerSigningKey = AuthTools.GetSymmetricSecurityKey(),
                     ValidateIssuerSigningKey = true
@@ -60,6 +63,7 @@ namespace CatchWave
             
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<GameHub>("game/{id}");
                 endpoints.MapControllers();
             });
         }

@@ -66,8 +66,8 @@ namespace CatchWave.Controllers
         {
             var user = new User()
             {
-                Id = Int32.Parse(User.FindFirst(ClaimTypes.Sid).Value),
-                Username = User.Identity.Name
+                Id = Int32.Parse(User.FindFirst("Id").Value),
+                Username = User.FindFirst("Username").Value
             };
             return user;
         }
